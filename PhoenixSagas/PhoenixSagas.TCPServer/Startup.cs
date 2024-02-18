@@ -22,7 +22,6 @@ namespace PhoenixSagas.TCPServer
                 //.AddSingleton<IKafkaFactory, KafkaFactory>()
                 .BuildServiceProvider();
 
-
             var tcpServer = service.GetService<TcpNetworkServer>();
             tcpServer.Start();
 
