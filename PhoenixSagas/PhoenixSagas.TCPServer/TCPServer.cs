@@ -10,8 +10,8 @@ namespace PhoenixSagas.TCPServer
 
         public void Start()
         {
-            Console.WriteLine("Running for 10 seconds then closing....");
-            Thread.Sleep(10000);
+            Console.WriteLine("Running for 5 seconds then closing....");
+            Thread.Sleep(5000);
             Console.WriteLine("Exiting.");
         }
     }
