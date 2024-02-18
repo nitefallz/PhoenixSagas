@@ -17,14 +17,14 @@ pipeline {
         stage('Restore') {
             steps {
                 // Restore dependencies specified in the project file
-                sh 'dotnet restore PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj'
+                sh 'dotnet restore PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj'
             }
         }
 
         stage('Build') {
             steps {
                 // Build the project
-                sh 'dotnet build PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
             }
         }
 
