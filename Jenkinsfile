@@ -4,9 +4,9 @@ pipeline {
     environment {
         // Using .NET 7.0 SDK
         DOTNET_CORE_SDK_VERSION = '7.0'
-        DOCKER_IMAGE = 'nitefallz/mystuff' // Docker Hub username/repo
+        DOCKER_IMAGE = 'nitefallz/mystuff' // Adjust with your Docker Hub repo name
         DOCKER_TAG = 'latest'
-        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID for Docker Hub credentials stored in Jenkins
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Use the actual ID for Docker Hub credentials
     }
 
     stages {
@@ -31,20 +31,21 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'No tests specified. Add commands to run tests here.'
-                // Example: sh 'dotnet test YourTestProject/YourTestProject.csproj'
+                // Ideally, include steps to run your project's tests
             }
         }
 
-       stage('Build Docker Image') {
-    steps {
-        script {
-            // Adjust the path if your Dockerfile is not in the root
-            dir('PhoenixSagas/PhoenixSagas.TCPServer/') { 
-                sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Correctly change to the PhoenixSagas directory before building the Docker image
+                    dir('PhoenixSagas/') { 
+                        sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
+                    }
+                }
             }
         }
-    }
-}
+
         stage('Push Docker Image') {
             steps {
                 script {
@@ -60,8 +61,7 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying application...'
-                    // Implement deployment logic here based on your target environment
-                    // This might involve SSH commands to a server, Kubernetes deployment commands, etc.
+                    // Define your deployment process here
                 }
             }
         }
