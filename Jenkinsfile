@@ -35,14 +35,16 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
-                }
+       stage('Build Docker Image') {
+    steps {
+        script {
+            // Adjust the path if your Dockerfile is not in the root
+            dir('PhoenixSagas/PhoenixSagas.TCPServer/') { 
+                sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
             }
         }
-
+    }
+}
         stage('Push Docker Image') {
             steps {
                 script {
