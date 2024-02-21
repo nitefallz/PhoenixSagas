@@ -57,15 +57,22 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-                    echo 'Deploying application...'
-                    // Define your deployment process here
-                }
-            }
+       stage('Deploy') {
+    steps {
+        script {
+            // Stopping and removing the old container if it exists
+            sh """
+            docker stop phoenixsagas-tcpserver-container || true
+            docker rm phoenixsagas-tcpserver-container || true
+            """
+            // Running the new container
+            sh """
+            docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+            """
         }
     }
+}
+
 
     post {
         success {
