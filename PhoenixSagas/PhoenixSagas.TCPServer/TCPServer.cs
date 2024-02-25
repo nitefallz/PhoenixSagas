@@ -1,160 +1,107 @@
-﻿
-//namespace PhoenixSagas.TCPServer
-//{
-//    public class TcpNetworkServer
-//    {
-//        public TcpNetworkServer()
-//        {
-
-//        }
-
-//        public void Start()
-//        {
-//            Console.WriteLine("Running for 5 seconds then closing....");
-//            Thread.Sleep(5000);
-//            Console.WriteLine("Exiting.");
-//        }
-//    }
-
-using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace PhoenixSagas.TCPSocketServer.Implementations
 {
     public class TcpNetworkServer
     {
-        private Socket _socketListener;
-        private bool _serverRunning;
-        private Thread _connectionMonitor;
-        private readonly int _backlogSize = 250;
+        private Socket _listenerSocket;
+        private readonly ConcurrentDictionary<int, TcpClient> _connectedClients = new ConcurrentDictionary<int, TcpClient>();
         private readonly int _portNumber = 4000;
-        private readonly Dictionary<int, TcpClient> _connectedClients = new Dictionary<int, TcpClient>();
+        private bool _isRunning;
 
         public TcpNetworkServer()
         {
+            _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
         public void Start()
         {
-            SocketSetup();
-            _connectionMonitor = new Thread(ConnectionMonitor);
-            _connectionMonitor.Start();
+            _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, _portNumber));
+            _listenerSocket.Listen(100);
+            _isRunning = true;
+            Console.WriteLine($"Server started on port {_portNumber}.");
+
+            Task.Run(() => AcceptConnections());
+
+            Console.WriteLine("Press 'q' to quit.");
+            while (Console.Read() != 'q')
+            {
+                // You can implement additional console commands here
+            }
+
+            ShutDown();
         }
 
-        private void SocketSetup()
-        {
-            Console.WriteLine($"Starting TCP server up on port: {_portNumber}");
-            _socketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socketListener.Bind(new IPEndPoint(IPAddress.Any, _portNumber));
-            _socketListener.Listen(_backlogSize);
-        }
 
-        private void ConnectionMonitor()
+        private void AcceptConnections()
         {
-            Console.WriteLine("Listening...");
-            _serverRunning = true;
-            while (_serverRunning)
+            while (_isRunning)
             {
                 try
                 {
-                    if (_socketListener.Poll(1000, SelectMode.SelectRead))
-                    {
-                        var clientSocket = _socketListener.Accept();
-                        var clientId = clientSocket.Handle.ToInt32();
-                        _connectedClients.Add(clientId, new TcpClient(clientSocket));
-                        Console.WriteLine($"Client connected: {clientId}");
-
-                        Task.Run(() => HandleClient(clientId));
-                    }
+                    // Accept a connection
+                    Socket clientSocket = _listenerSocket.Accept();
+                    Task.Run(() => ProcessClient(clientSocket));
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Connection Monitor Error: {ex.Message}");
+                    Console.WriteLine($"Accept connection error: {ex.Message}");
                 }
             }
         }
 
-        private async Task HandleClient(int clientId)
+        private async Task ProcessClient(Socket clientSocket)
         {
-            if (!_connectedClients.TryGetValue(clientId, out var client))
-            {
-                return;
-            }
+            var clientId = clientSocket.Handle.ToInt32();
+            Console.WriteLine($"Client connected: {clientId}");
 
             var buffer = new byte[1024];
+            var clientStream = new NetworkStream(clientSocket);
+
             try
             {
-                while (_serverRunning && client.Connected)
+                while (_isRunning && clientSocket.Connected)
                 {
-                    var bytesRead = await client.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                    var bytesRead = await clientStream.ReadAsync(buffer, 0, buffer.Length);
                     if (bytesRead > 0)
                     {
                         var receivedText = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                         Console.WriteLine($"Received from {clientId}: {receivedText}");
 
                         // Echo back the received message to the client
-                        await client.GetStream().WriteAsync(buffer, 0, bytesRead);
+                        await clientStream.WriteAsync(buffer, 0, bytesRead);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Handle Client Error: {ex.Message}");
+                Console.WriteLine($"Error with client {clientId}: {ex.Message}");
             }
             finally
             {
-                client.Close();
-                _connectedClients.Remove(clientId);
+                clientStream.Close();
+                clientSocket.Close();
                 Console.WriteLine($"Client disconnected: {clientId}");
             }
         }
 
         public void ShutDown()
         {
-            Console.WriteLine("Shutting down socket server...");
-            _serverRunning = false;
-            _socketListener.Close();
+            Console.WriteLine("Shutting down server...");
+            _isRunning = false;
+            _listenerSocket.Close();
+            // Close all client connections
             foreach (var client in _connectedClients.Values)
             {
                 client.Close();
             }
             _connectedClients.Clear();
-            Console.WriteLine("Socket server shutdown complete.");
-        }
-    }
-
-    public class TcpClient : IDisposable
-    {
-        private Socket _clientSocket;
-
-        public bool Connected => _clientSocket.Connected;
-
-        public TcpClient(Socket clientSocket)
-        {
-            _clientSocket = clientSocket;
-        }
-
-        public NetworkStream GetStream()
-        {
-            return new NetworkStream(_clientSocket);
-        }
-
-        public void Close()
-        {
-            _clientSocket.Shutdown(SocketShutdown.Both);
-            _clientSocket.Close();
-        }
-
-        public void Dispose()
-        {
-            Close();
+            Console.WriteLine("Server shutdown complete.");
         }
     }
 }
-
