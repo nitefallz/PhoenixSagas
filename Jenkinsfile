@@ -7,6 +7,8 @@ pipeline {
         DOCKER_IMAGE = 'nitefallz/mystuff' // Adjust with your Docker Hub repo name
         DOCKER_TAG = 'latest'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Use the actual ID for Docker Hub credentials
+        NUGET_SERVER_URL = 'http://gomezdev.hopto.org:8090/NugetServer/nuget' // Your NuGet server URL
+        NUGET_API_KEY = '711cf1f2-d71d-4a75-9293-ecc6e2992228' // Your NuGet server API Key
     }
 
     stages {
@@ -18,13 +20,13 @@ pipeline {
 
         stage('Restore') {
             steps {
-                sh 'dotnet restore PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj'
+                sh 'dotnet restore PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'dotnet build PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release'
             }
         }
 
@@ -35,10 +37,20 @@ pipeline {
             }
         }
 
+        stage('Package and Push NuGet') {
+            steps {
+                script {
+                    // Package the .NET project
+                    sh 'dotnet pack PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release -o ./nupkgs'
+                    // Push the package to your NuGet server
+                    sh 'dotnet nuget push "./nupkgs/*.nupkg" --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Correctly change to the PhoenixSagas directory before building the Docker image
                     dir('PhoenixSagas/') { 
                         sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
                     }
@@ -57,22 +69,21 @@ pipeline {
             }
         }
 
-		stage('Deploy') {
-		    steps {
-		        script {
-		            // Stopping and removing the old container if it exists
-		            sh """
-		            docker stop phoenixsagas-tcpserver-container || true
-		            docker rm phoenixsagas-tcpserver-container || true
-		            """
-		            // Running the new container
-		            sh """
-		            docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 ${DOCKER_IMAGE}:${DOCKER_TAG}
-		            """
-		        }
-		    }
-		}
-	}
+        stage('Deploy') {
+            steps {
+                script {
+                    sh """
+                    docker stop phoenixsagas-tcpserver-container || true
+                    docker rm phoenixsagas-tcpserver-container || true
+                    """
+                    sh """
+                    docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
+                }
+            }
+        }
+    }
+
     post {
         success {
             echo 'Build, Docker image push, and deployment stages completed successfully.'

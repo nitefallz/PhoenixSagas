@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <UserSecretsId>1bf3a8ad-847a-41d2-886b-8feb4a7094e7</UserSecretsId>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>PhoenixSagas Kafka Library</Title>
+    <Description>Kafka library for MUD</Description>
+    <RepositoryUrl>http://gomezdev.hopto.org:8090/NugetServer/nuget</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\IKafkaInputConsumer.cs" />
+    <Compile Remove="Interfaces\IKafkaOutputProducer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+    <PackageReference Include="librdkafka.redist" Version="1.8.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+ 
+
+</Project>
