@@ -48,13 +48,13 @@ namespace PhoenixSagas.TCPSocketServer.Implementations
 
         public async Task SendClientOutput(int clientId, string output)
         {
-            if (_connectedClients.TryGetValue(clientId, out var clientStream))
+            //if (_connectedClients.TryGetValue(clientId, out var clientStream))
             {
                 var buffer = Encoding.UTF8.GetBytes(output);
-                await clientStream.WriteAsync(buffer, 0, buffer.Length);
+              //  await clientStream.WriteAsync(buffer, 0, buffer.Length);
                 // Consider adding error handling and logging here
             }
-            else
+            //else
             {
                 Console.WriteLine($"Client {clientId} not found.");
                 // Handle the case where the client is not connected anymore
