@@ -20,17 +20,18 @@ pipeline {
 
         stage('Restore NuGet Packages') {
             steps {
-                sh 'dotnet restore PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj'
+                sh 'dotnet restore PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj'
                 // Assuming you might also need to restore for the TCPServer project or any other projects in the solution
-                sh 'dotnet restore PhoenixSagas/PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj'
+                sh 'dotnet restore PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj'
+
             }
         }
 
         stage('Build Projects') {
             steps {
-                sh 'dotnet build PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release'
                 // Build the TCPServer project if needed
-                sh 'dotnet build PhoenixSagas/PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
             }
         }
 
@@ -45,9 +46,10 @@ pipeline {
             steps {
                 script {
                     // Package the .NET project
-                    sh 'dotnet pack PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release -o ./nupkgs'
+                    sh 'dotnet pack PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release -o ./nupkgs'
                     // Push the package to your NuGet server
                     sh 'dotnet nuget push "./nupkgs/*.nupkg" --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}'
+
                 }
             }
         }
