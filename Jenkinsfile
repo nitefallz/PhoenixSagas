@@ -18,14 +18,7 @@ pipeline {
             }
         }
 
-        stage('Add NuGet Source') {
-            steps {
-                script {
-                    // Add the custom NuGet source defined in environment variables
-                    sh 'dotnet nuget add source "${NUGET_SERVER_URL}" --name CustomNuGetSource'
-                }
-            }
-        }
+       
 
         stage('Restore NuGet Packages') {
             steps {
