@@ -18,15 +18,19 @@ pipeline {
             }
         }
 
-        stage('Restore') {
+        stage('Restore NuGet Packages') {
             steps {
                 sh 'dotnet restore PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj'
+                // Assuming you might also need to restore for the TCPServer project or any other projects in the solution
+                sh 'dotnet restore PhoenixSagas/PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj'
             }
         }
 
-        stage('Build') {
+        stage('Build Projects') {
             steps {
                 sh 'dotnet build PhoenixSagas/PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release'
+                // Build the TCPServer project if needed
+                sh 'dotnet build PhoenixSagas/PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
             }
         }
 
@@ -72,11 +76,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // Commands to stop, remove, and run a new container instance
                     sh """
                     docker stop phoenixsagas-tcpserver-container || true
                     docker rm phoenixsagas-tcpserver-container || true
-                    """
-                    sh """
                     docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 ${DOCKER_IMAGE}:${DOCKER_TAG}
                     """
                 }
