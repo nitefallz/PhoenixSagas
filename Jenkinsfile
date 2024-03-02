@@ -48,7 +48,7 @@ pipeline {
                     // Package the .NET project
                     sh 'dotnet pack PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release -o ./nupkgs'
                     // Push the package to your NuGet server
-                    sh 'dotnet nuget push "./nupkgs/*.nupkg" --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}'
+                    sh 'dotnet nuget push "C:/Users/nitefallz/AppData/Local/Jenkins/.jenkins/workspace/PhoenixSagas_-_MB_master/nupkgs/*.nupkg" --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}'
 
                 }
             }
