@@ -47,9 +47,12 @@ pipeline {
                 script {
                     // Package the .NET project
                     sh 'dotnet pack PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release -o ./nupkgs'
-                    // Push the package to your NuGet server
-                    sh 'dotnet nuget push "C:/Users/nitefallz/AppData/Local/Jenkins/.jenkins/workspace/PhoenixSagas_-_MB_master/nupkgs/*.nupkg" --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}'
-
+                    
+                    // Find and push each package to the NuGet server
+                    def nugetPackages = findFiles(glob: 'nupkgs/*.nupkg')
+                    nugetPackages.each {
+                        sh "dotnet nuget push '${it.path}' --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}"
+                    }
                 }
             }
         }
