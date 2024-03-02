@@ -51,7 +51,7 @@ pipeline {
                     // Find and push each package to the NuGet server
                     def nugetPackages = findFiles(glob: 'nupkgs/*.nupkg')
                     nugetPackages.each {
-                        sh "dotnet nuget push '${it.path}' --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY}"
+                        sh "dotnet nuget push '${it.path}' --source ${NUGET_SERVER_URL} --api-key ${NUGET_API_KEY} --skip-duplicate"
                     }
                 }
             }
