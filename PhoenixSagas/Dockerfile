@@ -6,13 +6,13 @@ WORKDIR /app
 ARG NUGET_SOURCE
 
 # Copy csproj and restore any dependencies (via NuGet)
-COPY ["PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj", "PhoenixSagas.TCPServer/"]
+COPY ["TCPServer/PhoenixSagas.TCPServer.csproj", "TCPServer/"]
 RUN dotnet nuget add source "${NUGET_SOURCE}" --name CustomSource && \
-    dotnet restore "PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj"
+    dotnet restore "TCPServer/PhoenixSagas.TCPServer.csproj"
 
 # Copy the project files and build our release
 COPY . ./
-RUN dotnet publish "PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj" -c Release -o out
+RUN dotnet publish "TCPServer/PhoenixSagas.TCPServer.csproj" -c Release -o out
 
 # Generate the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
