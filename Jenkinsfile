@@ -57,11 +57,13 @@ pipeline {
             }
         }
 
+        
         stage('Build Docker Image') {
             steps {
                 script {
                     dir('PhoenixSagas/') { 
-                        sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
+                        // Add --build-arg to pass the NUGET_SERVER_URL to the Docker build
+                        sh 'docker build --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
                     }
                 }
             }

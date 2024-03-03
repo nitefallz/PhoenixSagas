@@ -2,9 +2,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 WORKDIR /app
 
+# Add ARG for NuGet source URL
+ARG NUGET_SOURCE
+
 # Copy csproj and restore any dependencies (via NuGet)
 COPY ["PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj", "PhoenixSagas.TCPServer/"]
-RUN dotnet restore "PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj"
+RUN dotnet nuget add source "${NUGET_SOURCE}" --name CustomSource && \
+    dotnet restore "PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj"
 
 # Copy the project files and build our release
 COPY . ./
