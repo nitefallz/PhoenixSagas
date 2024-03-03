@@ -1,17 +1,20 @@
-﻿using System.Collections.Concurrent;
+﻿using PhoenixSagas.Kafka.Implementations;
+using PhoenixSagas.Kafka.Interfaces;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace PhoenixSagas.TCPSocketServer.Implementations  
+namespace PhoenixSagas.TCPSocketServer.Implementations
 {
     public class ConnectionManager
     {
         private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
-        private readonly KafkaProducerService<string> _inputProducer;
-        private readonly KafkaConsumerService<string> _outputConsumer;
+    
+        private readonly IKafkaProducer<PlayerInputl> _kafkaInputProducer;
+        private readonly IKafkaProducer<PlayerConnection> _kafkaConnectionProducer;
+        private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
 
-        public ConnectionManager(KafkaProducerService<string> inputProducer, KafkaConsumerService<string> outputConsumer)
+        public ConnectionManager(IKafkaProducer<PlayerInput> inputProducer, KafkaConsumer<PlayerOutput> outputConsumer)
         {
             _inputProducer = inputProducer;
             _outputConsumer = outputConsumer;

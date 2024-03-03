@@ -8,6 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\libcrypto-1_1-x64.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\libcrypto-1_1.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\librdkafka.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\librdkafkacpp.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\libssl-1_1-x64.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\libssl-1_1.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\msvcp140.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\vcruntime140.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\zlib1.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\zstd.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
