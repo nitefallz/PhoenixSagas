@@ -7,7 +7,7 @@ pipeline {
         DOCKER_IMAGE = 'nitefallz/mystuff' // Adjust with your Docker Hub repo name
         DOCKER_TAG = 'latest'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Use the actual ID for Docker Hub credentials
-        NUGET_SERVER_URL = 'http://gomezdev.hopto.org:8090/NugetServer/nuget' // Your NuGet server URL
+        NUGET_SERVER_URL = 'https://gomezdev.hopto.org:8090/NugetServer/nuget' // Your NuGet server URL
         NUGET_API_KEY = '711cf1f2-d71d-4a75-9293-ecc6e2992228' // Your NuGet server API Key
     }
 
