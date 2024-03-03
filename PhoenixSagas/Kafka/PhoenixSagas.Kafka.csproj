@@ -6,7 +6,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>PhoenixSagas Kafka Library</Title>
     <Description>Kafka library for MUD</Description>
-    <RepositoryUrl>http://gomezdev.hopto.org:8090/NugetServer/nuget</RepositoryUrl>
+    <RepositoryUrl>https://gomezdev.hopto.org:8090/NugetServer/nuget</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
