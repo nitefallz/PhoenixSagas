@@ -23,7 +23,8 @@ pipeline {
             steps {
                 // Use the newly added source along with the default nuget.org source
                 sh 'dotnet restore PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
-                sh 'dotnet restore PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
+                sh 'dotnet restore PhoenixSagas/Models/PhoenixSagas.Kafka.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
+                sh 'dotnet restore PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
             }
         }
 
