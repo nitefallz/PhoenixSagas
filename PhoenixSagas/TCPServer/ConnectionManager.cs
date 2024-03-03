@@ -3,6 +3,7 @@ using PhoenixSagas.Kafka.Interfaces;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
+using PhoenixSagas.Models;
 
 namespace PhoenixSagas.TCPSocketServer.Implementations
 {
@@ -10,14 +11,14 @@ namespace PhoenixSagas.TCPSocketServer.Implementations
     {
         private readonly ConcurrentDictionary<int, TcpClient> _clients = new();
     
-        private readonly IKafkaProducer<PlayerInputl> _kafkaInputProducer;
+        private readonly IKafkaProducer<PlayerInput> _kafkaInputProducer;
         private readonly IKafkaProducer<PlayerConnection> _kafkaConnectionProducer;
         private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
 
         public ConnectionManager(IKafkaProducer<PlayerInput> inputProducer, KafkaConsumer<PlayerOutput> outputConsumer)
         {
-            _inputProducer = inputProducer;
-            _outputConsumer = outputConsumer;
+            _kafkaInputProducer = inputProducer;
+            _kafkaOutputConsumer = outputConsumer;
         }
 
         public void HandleNewConnection(Socket socket)
@@ -35,7 +36,7 @@ namespace PhoenixSagas.TCPSocketServer.Implementations
             {
                 var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
                 var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                await _inputProducer.SendMessageAsync(message);
+                //await _kafkaInputProducer.Produce(message);
             }
             // Handle client disconnection
         }
