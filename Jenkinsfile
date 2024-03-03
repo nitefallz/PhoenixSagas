@@ -23,14 +23,16 @@ pipeline {
             steps {
                 // Use the newly added source along with the default nuget.org source
                 sh 'dotnet restore PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
-                sh 'dotnet restore PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
+                sh 'dotnet restore PhoenixSagas/Models/PhoenixSagas.Models.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
+                sh 'dotnet restore PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
             }
         }
 
         stage('Build Projects') {
             steps {
+                sh 'dotnet build PhoenixSagas/Models/PhoenixSagas.Models.csproj --configuration Release'
                 sh 'dotnet build PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release'
-                sh 'dotnet build PhoenixSagas/PhoenixSagas.TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
             }
         }
 
@@ -47,6 +49,7 @@ pipeline {
                 script {
                     // Package the .NET project
                     sh 'dotnet pack PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release -o ./nupkgs'
+                    sh 'dotnet pack PhoenixSagas/Models/PhoenixSagas.Models.csproj --configuration Release -o ./nupkgs'
                     
                     // Find and push each package to the NuGet server
                     def nugetPackages = findFiles(glob: 'nupkgs/*.nupkg')
