@@ -3,10 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
+</PropertyGroup>
   <ItemGroup>
     <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\libcrypto-1_1-x64.dll" />
     <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.0\contentFiles\any\netstandard2.1\libcrypto-1_1.dll" />

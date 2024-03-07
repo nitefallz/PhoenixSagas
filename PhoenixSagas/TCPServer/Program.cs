@@ -1,8 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PhoenixSagas.TCPSocketServer.Implementations;
+using PhoenixSagas.TcpServer.Implementations;
+using PhoenixSagas.TCPServer.Implementations;
 using System.IO;
-using Microsoft.Extensions.Configuration;
+using PhoenixSagas.Kafka.Implementations;
+using PhoenixSagas.Kafka.Interfaces;
+using PhoenixSagas.Models;
 
 namespace PhoenixSagas.TCPServer
 {
@@ -23,8 +27,11 @@ namespace PhoenixSagas.TCPServer
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddSingleton<TcpNetworkServer>();
+                    services.AddSingleton<TcpSerer>();
                     services.AddHostedService<TcpServerHostedService>();
+                    services.AddSingleton<IConnectedClientsMap, ConnectedClientMap>();
+                    services.AddSingleton<ConnectionManager>();
+                    services.AddSingleton<IKafkaFactory, KafkaFactory>();
                     // Add any additional services or configurations here
                 });
     }
