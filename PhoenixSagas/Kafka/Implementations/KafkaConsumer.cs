@@ -1,122 +1,72 @@
 ﻿using Confluent.Kafka;
-using PhoenixSagas.Kafka.Interfaces;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
+using PhoenixSagas.Kafka.Interfaces;
 
 namespace PhoenixSagas.Kafka.Implementations
 {
-
-    public class KafkaConsumer<T> : IKafkaConsumer<T> where T : new()
+    public class KafkaConsumer<T> : IKafkaConsumer<T> where T : new() //IDisposable where T : new()
     {
-        public EventHandler<T> MessagesHandler { get; set; }
         private readonly string _topic;
-        private readonly Thread _threadMonitor;
         private IConsumer<Guid, T> _messageConsumer;
-        readonly CancellationTokenSource _cancelToken;
         private readonly ConsumerConfig _conf;
-        private bool _running;
+        private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
+        private readonly IMessageHandler<T> _messageHandler;
 
-        public KafkaConsumer(string Topic)
+        public KafkaConsumer(string topic, IMessageHandler<T> messageHandler)
         {
-
-            _topic = Topic;
-            _running = false;
-            _threadMonitor = new Thread(ReadMessagesAsync);
-            _cancelToken = new CancellationTokenSource();
+            _topic = topic;
+            _messageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
             _conf = new ConsumerConfig
             {
                 GroupId = "phoenixsagas",
-                BootstrapServers = "gomezdev.hopto.org:29092",
+                BootstrapServers = "localhost:9092",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = false,
-                EnableAutoOffsetStore = false,
-                //xPollIntervalMs = 10000,
-                //SessionTimeoutMs = 300000,
-                AllowAutoCreateTopics = true
+                EnableAutoCommit = true
             };
-
-            using (_messageConsumer = new ConsumerBuilder<Guid, T>(_conf)
-                       .SetKeyDeserializer(new GuidDeserializer())
-                       .SetValueDeserializer(new OutputDeserializer<T>())
-                       .SetPartitionsAssignedHandler((c, partitions) =>
-                       {
-                           // Handle partitions assigned, e.g., seek to specific offsets
-                       })
-                       .SetPartitionsRevokedHandler((c, partitions) =>
-                       {
-                           // Commit offsets before rebalance
-                           try
-                           {
-                               c.Commit();
-                           }
-                           catch (KafkaException e)
-                           {
-                               Console.WriteLine($"Commit error before rebalance: {e.Error.Reason}");
-                           }
-                       })
-                       .Build()) ;
+            _messageConsumer = new ConsumerBuilder<Guid, T>(_conf)
+                                .SetKeyDeserializer(new GuidDeserializer())
+                                .SetValueDeserializer(new OutputDeserializer<T>())
+                                .Build();
         }
 
-        public void Start() => _threadMonitor.Start();
-
-        public void Shutdown()
+        public void Start()
         {
-            _running = false;
-            Thread.Sleep(500);
-            _cancelToken.Cancel();
+            Task.Run(() => ConsumeMessagesAsync(_cancelToken.Token));
         }
 
-        public void ReadMessagesAsync()
+        private async Task ConsumeMessagesAsync(CancellationToken cancellationToken)
         {
-            _running = true;
-            try
+            _messageConsumer.Subscribe(_topic);
+
+            while (!cancellationToken.IsCancellationRequested)
             {
-                using (_messageConsumer = new ConsumerBuilder<Guid, T>(_conf).SetKeyDeserializer(new GuidDeserializer()).SetValueDeserializer(new OutputDeserializer<T>()).Build())
+                try
                 {
-                    TopicPartition tp = new TopicPartition(_topic, 0);
-                    _messageConsumer.Assign(tp);
-                    _messageConsumer.Subscribe(_topic);
-
-                    while (_running)
-                    {
-                        try
-                        {
-                            var messagesRead = _messageConsumer.Consume(TimeSpan.FromMilliseconds(_conf.MaxPollIntervalMs - 1000 ?? 15000));
-                            if (messagesRead == null)
-                                continue;
-                            //Console.WriteLine($"new Kafka message for {_topic}, offset - {messagesRead.Offset}");
-                            MessagesHandler?.Invoke(this, messagesRead.Message.Value);
-
-                            try
-                            {
-                                //Console.WriteLine("Comitting offsets...");
-                                _messageConsumer.Commit(messagesRead);
-                                _messageConsumer.StoreOffset(messagesRead);
-                                //Console.WriteLine($"Commited offset, and stored {messagesRead.Offset} - {messagesRead.TopicPartitionOffset}");
-                            }
-                            catch (KafkaException e)
-                            {
-                                Console.WriteLine($"Commit error: {e.Error.Reason}");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            //Logger.Error($"Kafka Consumer for topic: {_topic} - {ex.Message}");
-                        }
-                    }
-                    //Logger.Error("Closing kafka consumer");
+                    var consumeResult = _messageConsumer.Consume(cancellationToken);
+                    await _messageHandler.HandleMessageAsync(consumeResult.Message.Value, cancellationToken);
+                }
+                catch (OperationCanceledException)
+                {
+                    break; // Graceful exit
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error consuming message: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                //Logger.Error($"Kafka Consumer for topic: {_topic} - {ex.Message}");
-            }
 
+            _messageConsumer.Close(); // Ensure the consumer is properly closed when finished
         }
 
         public void Dispose()
         {
+            _cancelToken.Cancel();
+            _messageConsumer?.Dispose();
+            _cancelToken?.Dispose();
         }
     }
 
+    // Include implementations for GuidDeserializer and CustomDeserializer<T> as needed.
 }

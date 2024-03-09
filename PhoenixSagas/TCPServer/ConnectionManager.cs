@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Confluent.Kafka;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
+using PhoenixSagas.Models;
+using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using PhoenixSagas.Models;
-using Confluent.Kafka;
-using System.IO;
-using System.Net;
-using System.Runtime.Serialization;
 
 namespace PhoenixSagas.TCPServer.Implementations
 {
@@ -21,19 +18,17 @@ namespace PhoenixSagas.TCPServer.Implementations
         public bool InGame { get; set; }
         public Guid gameId { get; set; }
     }
+
     public interface IConnectedClientsMap
     {
         ConcurrentDictionary<int, NetworkClient> Map { get; set; }
         NetworkClient GetClient(int id);
     }
+
     public class ConnectedClientMap : IConnectedClientsMap
     {
-        public ConcurrentDictionary<int, NetworkClient> Map { get; set; }
+        public ConcurrentDictionary<int, NetworkClient> Map { get; set; } = new();
 
-        public ConnectedClientMap()
-        {
-            Map = new ConcurrentDictionary<int, NetworkClient>();
-        }
         public NetworkClient GetClient(int id)
         {
             Map.TryGetValue(id, out var value);
@@ -44,24 +39,20 @@ namespace PhoenixSagas.TCPServer.Implementations
     {
         private readonly IConnectedClientsMap _clients;
         private readonly IKafkaProducer<PlayerInput> _kafkaInputProducer;
-        //private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
+        private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
 
         public ConnectionManager(IConnectedClientsMap clients)
         {
             _kafkaInputProducer = new KafkaFactory().BuildProducer<PlayerInput>("PlayerInput");
             _clients = clients ?? throw new ArgumentNullException(nameof(clients));
-            // _kafkaOutputConsumer = outputConsumer ?? throw new ArgumentNullException(nameof(outputConsumer));
-            // Assume KafkaConsumer configuration and start consuming messages
+            _kafkaOutputConsumer = new KafkaConsumer<PlayerOutput>("PlayerOutput");
         }
 
         public void HandleNewConnection(Socket socket)
         {
-            //var client = new TcpClient { Client = socket };
             var tcpclient = new NetworkClient { client = new TcpClient { Client = socket }, Handle = socket.Handle.ToInt32(), InGame = false, gameId = Guid.NewGuid(), PendingDisconnect = false };
             var clientId = socket.Handle.ToInt32();
             _clients.Map.TryAdd(clientId, tcpclient);
-            //_clients[clientId] = client;
-
             Task.Run(() => ReadClientInput(tcpclient, clientId));
         }
 
@@ -71,18 +62,16 @@ namespace PhoenixSagas.TCPServer.Implementations
             var buffer = new byte[1024];
             while (client.client.Connected)
             {
-                int bytesRead;
                 try
                 {
-                    bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                    var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
                     if (bytesRead == 0)
                     {
-                        // Handle client disconnection
                         Console.WriteLine($"Client {clientId} disconnected.");
                         break;
                     }
                     var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    // Process the message, e.g., produce to Kafka
+
                     var msg = new Message<Guid, PlayerInput>
                     {
                         Key = client.gameId,
@@ -102,10 +91,11 @@ namespace PhoenixSagas.TCPServer.Implementations
                     break;
                 }
             }
-            // Remove the client from the dictionary and close the connection
+
             if (_clients.Map.TryRemove(clientId, out var _))
             {
                 client.client.Close();
+                client.client.Dispose();
             }
         }
     }
