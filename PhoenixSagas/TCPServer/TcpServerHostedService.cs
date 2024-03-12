@@ -1,26 +1,28 @@
 ﻿using Microsoft.Extensions.Hosting;
-using PhoenixSagas.TcpServer.Implementations;
 using System.Threading;
 using System.Threading.Tasks;
 
-public class TcpServerHostedService : IHostedService
+namespace PhoenixSagas.TcpServer.Implementations
 {
-    private readonly TcpSerer _tcpSerer;
-
-    public TcpServerHostedService(TcpSerer tcpSerer)
+    public class TcpServerHostedService : IHostedService
     {
-        _tcpSerer = tcpSerer;
-    }
+        private readonly TcpNetworkServer _tcpServer;
 
-    public Task StartAsync(CancellationToken cancellationToken)
-    {
-        _tcpSerer.StartAsync(cancellationToken);
-        return Task.CompletedTask;
-    }
+        public TcpServerHostedService(TcpNetworkServer tcpServer)
+        {
+            _tcpServer = tcpServer;
+        }
 
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        _tcpSerer.ShutDown();
-        return Task.CompletedTask;
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            _tcpServer.StartAsync(cancellationToken);
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _tcpServer.ShutDown();
+            return Task.CompletedTask;
+        }
     }
 }

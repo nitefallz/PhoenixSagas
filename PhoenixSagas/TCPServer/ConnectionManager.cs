@@ -7,11 +7,16 @@ using System;
 using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhoenixSagas.TCPServer.Implementations
+namespace PhoenixSagas.TcpServer.Implementations
 {
+    public interface IConnectionManager
+    {
+        void HandleNewConnection(Socket socket);
+        Task ReadClientInput(NetworkClient client, int clientId);
+    }
+
     public class NetworkClient
     {
         public TcpClient client { get; set; }
@@ -37,7 +42,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             return value;
         }
     }
-    public class ConnectionManager
+    public class ConnectionManager : IConnectionManager
     {
         private readonly IConnectedClientsMap _clients;
         private readonly IKafkaProducer<PlayerInput> _kafkaInputProducer;
@@ -63,7 +68,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             Task.Run(() => ReadClientInput(tcpclient, clientId));
         }
 
-        private async Task ReadClientInput(NetworkClient client, int clientId)
+        public async Task ReadClientInput(NetworkClient client, int clientId)
         {
             var stream = client.client.GetStream();
             var buffer = new byte[1024];
@@ -105,6 +110,5 @@ namespace PhoenixSagas.TCPServer.Implementations
                 client.client.Dispose();
             }
         }
-
     }
 }

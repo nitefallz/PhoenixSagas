@@ -1,5 +1,4 @@
-﻿using PhoenixSagas.TCPServer.Implementations;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -7,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace PhoenixSagas.TcpServer.Implementations
 {
-    public class TcpSerer
+    public class TcpNetworkServer : ITcpNetworkServer
     {
         private readonly Socket _listenerSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        private readonly ConnectionManager _connectionManager;
+        private readonly IConnectionManager _connectionManager;
         private readonly int _port = 4000;
         private CancellationTokenSource _cts = new();
 
-        public TcpSerer(ConnectionManager connectionManager, int port = 4000)
+        public TcpNetworkServer(IConnectionManager connectionManager, int port = 4000)
         {
             _connectionManager = connectionManager ?? throw new ArgumentNullException(nameof(connectionManager));
             _port = port;

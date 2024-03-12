@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace PhoenixSagas.TCPServer.Implementations
+namespace PhoenixSagas.TcpServer.Implementations
 {
     public class OutputHandler : IMessageHandler<PlayerOutput>
     {
