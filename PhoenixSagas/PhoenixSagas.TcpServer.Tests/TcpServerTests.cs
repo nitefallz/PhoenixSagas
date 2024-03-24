@@ -1,10 +1,10 @@
 using Xunit;
 using Moq;
-using PhoenixSagas.TcpServer.Implementations;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using PhoenixSagas.TCPServer.Interfaes;
 
 namespace PhoenixSagas.Tests
 {

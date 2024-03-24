@@ -3,45 +3,15 @@ using Microsoft.Extensions.Logging;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
 using PhoenixSagas.Models;
+using PhoenixSagas.TCPServer.Interfaes;
+using PhoenixSagas.TCPServer.Models;
 using System;
-using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoenixSagas.TcpServer.Implementations
+namespace PhoenixSagas.TCPServer.Implementations
 {
-    public interface IConnectionManager
-    {
-        void HandleNewConnection(Socket socket);
-        Task ReadClientInput(NetworkClient client, int clientId);
-    }
-
-    public class NetworkClient
-    {
-        public TcpClient client { get; set; }
-        public bool PendingDisconnect { get; set; }
-        public int Handle { get; set; }
-        public bool InGame { get; set; }
-        public Guid gameId { get; set; }
-    }
-
-    public interface IConnectedClientsMap
-    {
-        ConcurrentDictionary<int, NetworkClient> Map { get; set; }
-        NetworkClient GetClient(int id);
-    }
-
-    public class ConnectedClientMap : IConnectedClientsMap
-    {
-        public ConcurrentDictionary<int, NetworkClient> Map { get; set; } = new();
-
-        public NetworkClient GetClient(int id)
-        {
-            Map.TryGetValue(id, out var value);
-            return value;
-        }
-    }
     public class ConnectionManager : IConnectionManager
     {
         private readonly IConnectedClientsMap _clients;

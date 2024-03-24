@@ -3,8 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
-using PhoenixSagas.TcpServer.Implementations;
 using System.IO;
+using PhoenixSagas.TCPServer.Interfaes;
+using PhoenixSagas.TCPServer.Implementations;
 
 namespace PhoenixSagas.TcpServer
 {

@@ -3,6 +3,7 @@ using Moq;
 using PhoenixSagas.Kafka.Interfaces;
 using PhoenixSagas.Models;
 using PhoenixSagas.TcpServer.Implementations;
+using PhoenixSagas.TCPServer.Implementations;
 using System.Net.Sockets;
 
 namespace PhoenixSagas.Tests

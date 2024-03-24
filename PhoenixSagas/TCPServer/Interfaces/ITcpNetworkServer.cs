@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
 
-namespace PhoenixSagas.TcpServer.Implementations
+namespace PhoenixSagas.TCPServer.Interfaes
 {
     public interface ITcpNetworkServer
     {
-        public Task StartAsync(CancellationToken cancellationToken);
+        public Task Start(CancellationToken cancellationToken);
         public void ShutDown();
     }
 }

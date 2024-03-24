@@ -3,8 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using PhoenixSagas.TCPServer.Interfaes;
 
-namespace PhoenixSagas.TcpServer.Implementations
+namespace PhoenixSagas.TCPServer.Implementations
 {
     public class TcpNetworkServer : ITcpNetworkServer
     {
@@ -19,11 +20,11 @@ namespace PhoenixSagas.TcpServer.Implementations
             _port = port;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task Start(CancellationToken cancellationToken)
         {
             _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, _port));
-            _listenerSocket.Listen(120); // Adjust the backlog as necessary
+            _listenerSocket.Listen(120); 
             Console.WriteLine($"Server started on port {_port}.");
 
             while (!_cts.Token.IsCancellationRequested)
@@ -33,10 +34,9 @@ namespace PhoenixSagas.TcpServer.Implementations
                     var clientSocket = await _listenerSocket.AcceptAsync(cancellationToken);
                     _connectionManager.HandleNewConnection(clientSocket);
                 }
-                catch (Exception ex) when (ex is SocketException || ex is ObjectDisposedException)
+                catch (Exception ex) when (ex is SocketException or ObjectDisposedException)
                 {
                     Console.WriteLine($"Accept connection error: {ex.Message}");
-                    // Break the loop if the listener socket is closed
                     if (_listenerSocket is { IsBound: false }) break;
                 }
             }
