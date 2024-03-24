@@ -3,9 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
-using System.IO;
-using PhoenixSagas.TCPServer.Interfaes;
+using PhoenixSagas.Models;
+using PhoenixSagas.TCPServer;
 using PhoenixSagas.TCPServer.Implementations;
+using PhoenixSagas.TCPServer.Interfaces;
+using System.IO;
 
 namespace PhoenixSagas.TcpServer
 {
@@ -31,6 +33,9 @@ namespace PhoenixSagas.TcpServer
                     services.AddSingleton<IConnectedClientsMap, ConnectedClientMap>();
                     services.AddSingleton<IConnectionManager, ConnectionManager>();
                     services.AddSingleton<IKafkaFactory, KafkaFactory>();
+                    services.AddSingleton<IMessageHandler<PlayerOutput>, OutputHandler>();
+
+
                     // Add any additional services or configurations here
                 });
     }

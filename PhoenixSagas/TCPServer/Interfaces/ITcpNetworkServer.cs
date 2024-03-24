@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
 
-namespace PhoenixSagas.TCPServer.Interfaes
+namespace PhoenixSagas.TCPServer.Interfaces
 {
     public interface ITcpNetworkServer
     {

@@ -2,8 +2,8 @@
 using Moq;
 using PhoenixSagas.Kafka.Interfaces;
 using PhoenixSagas.Models;
-using PhoenixSagas.TcpServer.Implementations;
 using PhoenixSagas.TCPServer.Implementations;
+using PhoenixSagas.TCPServer.Interfaces;
 using System.Net.Sockets;
 
 namespace PhoenixSagas.Tests
@@ -19,7 +19,7 @@ namespace PhoenixSagas.Tests
             var mockLogger = new Mock<ILogger<OutputHandler>>();
 
             // Although we're testing the concrete ConnectionManager, it's designed to implement IConnectionManager
-            var connectionManager = new ConnectionManager(clientsMap, mockKafkaProducer.Object, "playerOutputTopic", mockLogger.Object) as IConnectionManager;
+            var connectionManager = new ConnectionManager(clientsMap, "playerOutputTopic", mockLogger.Object) as IConnectionManager;
 
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             // Ensure your method of generating client IDs aligns with ConnectionManager's approach

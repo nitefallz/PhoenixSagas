@@ -1,12 +1,12 @@
-﻿using PhoenixSagas.Kafka.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using PhoenixSagas.Kafka.Interfaces;
 using PhoenixSagas.Models;
+using PhoenixSagas.TCPServer.Interfaces;
+using PhoenixSagas.TCPServer.Models;
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using PhoenixSagas.TCPServer.Interfaes;
-using PhoenixSagas.TCPServer.Models;
 
 namespace PhoenixSagas.TCPServer.Implementations
 {

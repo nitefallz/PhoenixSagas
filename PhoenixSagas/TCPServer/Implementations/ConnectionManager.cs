@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
 using PhoenixSagas.Models;
-using PhoenixSagas.TCPServer.Interfaes;
+using PhoenixSagas.TCPServer.Interfaces;
 using PhoenixSagas.TCPServer.Models;
 using System;
 using System.Net.Sockets;
@@ -19,15 +19,15 @@ namespace PhoenixSagas.TCPServer.Implementations
         private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
         private readonly ILogger<OutputHandler> _outputHandlerLogger;
 
-        public ConnectionManager(IConnectedClientsMap clients, IKafkaProducer<PlayerInput> kafkaInputProducer, string playerOutputTopic, ILogger<OutputHandler> outputHandlerLogger)
+        public ConnectionManager(IConnectedClientsMap clients,  ILogger<OutputHandler> outputHandlerLogger)
         {
             _clients = clients ?? throw new ArgumentNullException(nameof(clients));
-            _kafkaInputProducer = kafkaInputProducer ?? throw new ArgumentNullException(nameof(kafkaInputProducer));
+            _kafkaInputProducer = new KafkaFactory().BuildProducer<PlayerInput>("PlayerInput"); //kafkaInputProducer ?? throw new ArgumentNullException(nameof(kafkaInputProducer));
             _outputHandlerLogger = outputHandlerLogger ?? throw new ArgumentNullException(nameof(outputHandlerLogger));
 
             var outputHandler = new OutputHandler(clients, _outputHandlerLogger);
-            _kafkaOutputConsumer = new KafkaConsumer<PlayerOutput>(playerOutputTopic, outputHandler);
-            _kafkaOutputConsumer.Start();
+           // _kafkaOutputConsumer = new KafkaConsumer<PlayerOutput>(playerOutputTopic, outputHandler);
+           // _kafkaOutputConsumer.Start();
         }
 
         public void HandleNewConnection(Socket socket)

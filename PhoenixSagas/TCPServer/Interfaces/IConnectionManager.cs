@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace PhoenixSagas.TCPServer.Interfaes;
+namespace PhoenixSagas.TCPServer.Interfaces;
 
 public interface IConnectionManager
 {

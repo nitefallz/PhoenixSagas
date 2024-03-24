@@ -2,14 +2,16 @@
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
+using PhoenixSagas.TCPServer.Implementations;
+using PhoenixSagas.TCPServer.Interfaces;
 
-namespace PhoenixSagas.TCPServer.Implementations
+namespace PhoenixSagas.TCPServer
 {
     public class TcpServerHostedService : IHostedService
     {
-        private readonly TcpNetworkServer _tcpServer;
+        private readonly ITcpNetworkServer _tcpServer;
 
-        public TcpServerHostedService(TcpNetworkServer tcpServer)
+        public TcpServerHostedService(ITcpNetworkServer tcpServer)
         {
             _tcpServer = tcpServer;
         }
