@@ -19,3 +19,18 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "PhoenixSagas.TCPServer.dll"]
+
+
+COPY ["GameServer/PhoenixSagas.GameServer.csproj", "GameServer/"]
+RUN dotnet nuget add source "${NUGET_SOURCE}" --name CustomSource && \
+    dotnet restore "GameServer/PhoenixSagas.GameServer.csproj"
+
+# Copy the project files and build our release
+COPY . ./
+RUN dotnet publish "GameServer/PhoenixSagas.GamServer.csproj" -c Release -o out
+
+# Generate the runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "PhoenixSagas.GameServer.dll"]
