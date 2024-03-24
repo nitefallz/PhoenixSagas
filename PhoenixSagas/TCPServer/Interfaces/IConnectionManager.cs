@@ -1,7 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using PhoenixSagas.TCPServer.Models;
+using System.Net.Sockets;
 using System.Threading.Tasks;
-using PhoenixSagas.TcpServer.Implementations;
-using PhoenixSagas.TCPServer.Models;
 
 namespace PhoenixSagas.TCPServer.Interfaes;
 
