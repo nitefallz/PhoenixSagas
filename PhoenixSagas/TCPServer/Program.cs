@@ -31,6 +31,7 @@ namespace PhoenixSagas.TcpServer
                     services.AddSingleton<IConnectedClientsMap, ConnectedClientMap>();
                     services.AddSingleton<IConnectionManager, ConnectionManager>();
                     services.AddSingleton<IKafkaFactory, KafkaFactory>();
+                    
                     // Add any additional services or configurations here
                 });
     }
