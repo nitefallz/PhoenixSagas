@@ -14,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.Models", "Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.TCPServer", "TCPServer\PhoenixSagas.TCPServer.csproj", "{19122D44-EE11-4C1B-927B-B33604D1784D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoenixSagas.TcpServer.Tests", "PhoenixSagas.TcpServer.Tests\PhoenixSagas.TcpServer.Tests.csproj", "{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.TcpServer.Tests", "PhoenixSagas.TcpServer.Tests\PhoenixSagas.TcpServer.Tests.csproj", "{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot", "ChatBot\ChatBot.csproj", "{7B13415E-9988-4487-A09D-84ABD4FBACA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B13415E-9988-4487-A09D-84ABD4FBACA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B13415E-9988-4487-A09D-84ABD4FBACA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B13415E-9988-4487-A09D-84ABD4FBACA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B13415E-9988-4487-A09D-84ABD4FBACA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
