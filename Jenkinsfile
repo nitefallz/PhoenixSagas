@@ -98,6 +98,18 @@ pipeline {
                 }
             }
         }
+         stage('Deploy GameEngine') {
+            steps {
+                script {
+                    // Commands to run GameEngine container
+                    sh """
+                    docker stop gameengine-container || true
+                    docker rm gameengine-container || true
+                    docker run -d --name gameengine-container -p 8000:8000 ${GAME_ENGINE_IMAGE}:${GAME_ENGINE_TAG}
+                    """
+                }
+            }
+        }      
     }
 
     post {
