@@ -1,14 +1,5 @@
-﻿using PhoenixSagas.TcpServer.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Moq;
-using PhoenixSagas.Kafka.Interfaces;
-using PhoenixSagas.Models;
+﻿using PhoenixSagas.TCPServer.Implementations;
+using PhoenixSagas.TCPServer.Models;
 
 namespace PhoenixSagas.Tests
 {

@@ -5,5 +5,6 @@ namespace PhoenixSagas.Kafka.Interfaces
     public interface IKafkaConsumer<T> : IDisposable where T : new()
     {
         public void Start();
+        public void Shutdown();
     }
 }

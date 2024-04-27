@@ -23,6 +23,7 @@ pipeline {
                 // Use the newly added source along with the default nuget.org source
                 sh 'dotnet restore PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
                 sh 'dotnet restore PhoenixSagas/Models/PhoenixSagas.Models.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
+                sh 'dotnet restore PhoenixSagas/GameEngine/PhoenixSagas.GameEngine.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
                 sh 'dotnet restore PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
                 sh 'dotnet restore PhoenixSagas/GameServer/PhoenixSagas.GameServer.csproj --source "${NUGET_SERVER_URL}" --source "https://api.nuget.org/v3/index.json"'
             }
@@ -33,7 +34,8 @@ pipeline {
                 sh 'dotnet build PhoenixSagas/Models/PhoenixSagas.Models.csproj --configuration Release'
                 sh 'dotnet build PhoenixSagas/Kafka/PhoenixSagas.Kafka.csproj --configuration Release'
                 sh 'dotnet build PhoenixSagas/TCPServer/PhoenixSagas.TCPServer.csproj --configuration Release'
-                sh 'dotnet build PhoenixSagas/TCPServer/PhoenixSagas.GameServer.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/GameEngine/PhoenixSagas.GameEngine.csproj --configuration Release'
+                sh 'dotnet build PhoenixSagas/GameServer/PhoenixSagas.GameServer.csproj --configuration Release'
             }
         }
 

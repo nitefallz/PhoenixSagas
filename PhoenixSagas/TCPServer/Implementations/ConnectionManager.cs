@@ -36,6 +36,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             var tcpclient = new NetworkClient { client = new TcpClient { Client = socket }, Handle = socket.Handle.ToInt32(), InGame = false, gameId = Guid.NewGuid(), PendingDisconnect = false };
             var clientId = socket.Handle.ToInt32();
             _clients.Map.TryAdd(clientId, tcpclient);
+            Console.WriteLine($"Client connected {clientId}");
             Task.Run(() => ReadClientInput(tcpclient, clientId));
         }
 

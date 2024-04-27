@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -18,11 +18,33 @@
     <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.1\contentFiles\any\netstandard2.1\vcruntime140.dll" />
     <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.1\contentFiles\any\netstandard2.1\zlib1.dll" />
     <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.1\contentFiles\any\netstandard2.1\zstd.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\libcrypto-1_1-x64.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\libcrypto-1_1.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\librdkafka.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\librdkafkacpp.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\libssl-1_1-x64.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\libssl-1_1.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\msvcp140.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\vcruntime140.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\zlib1.dll" />
+    <Content Remove="C:\Users\Gomez\.nuget\packages\phoenixsagas.kafka\1.0.2\contentFiles\any\netstandard2.1\zstd.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="PhoenixSagas.Kafka" Version="1.0.1" />
+    <PackageReference Include="PhoenixSagas.Kafka" Version="1.0.3" />
+    <PackageReference Include="PhoenixSagas.Models" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kafka\PhoenixSagas.Kafka.csproj" />
+    <ProjectReference Include="..\Models\PhoenixSagas.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PhoenixSagas.Kafka">
+      <HintPath>..\Kafka\bin\Debug\netstandard2.1\PhoenixSagas.Kafka.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

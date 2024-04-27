@@ -1,34 +1,41 @@
 ﻿using Confluent.Kafka;
+using PhoenixSagas.Kafka.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using PhoenixSagas.Kafka.Interfaces;
 
 namespace PhoenixSagas.Kafka.Implementations
 {
-    public class KafkaConsumer<T> : IKafkaConsumer<T> where T : new() //IDisposable where T : new()
+    public class KafkaConsumer<T> : IKafkaConsumer<T> where T : new()
     {
         private readonly string _topic;
-        private IConsumer<Guid, T> _messageConsumer;
-        private readonly ConsumerConfig _conf;
+        private readonly IConsumer<Guid, T> _messageConsumer;
+        public EventHandler<T> _messagesHandler;
         private readonly CancellationTokenSource _cancelToken = new CancellationTokenSource();
-        private readonly IMessageHandler<T> _messageHandler;
 
-        public KafkaConsumer(string topic, IMessageHandler<T> messageHandler)
+        public KafkaConsumer(string topic, EventHandler<T> messageHandler)
         {
-            _topic = topic;
-            _messageHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
-            _conf = new ConsumerConfig
+            try
             {
-                GroupId = "phoenixsagas",
-                BootstrapServers = "localhost:9092",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = true
-            };
-            _messageConsumer = new ConsumerBuilder<Guid, T>(_conf)
-                                .SetKeyDeserializer(new GuidDeserializer())
-                                .SetValueDeserializer(new OutputDeserializer<T>())
-                                .Build();
+                _topic = topic;
+                _messagesHandler = messageHandler ?? throw new ArgumentNullException(nameof(messageHandler));
+
+                var conf = new ConsumerConfig
+                {
+                    GroupId = "phoenixsagas",
+                    BootstrapServers = "gomezdev.hopto.org:29092",
+                    AutoOffsetReset = AutoOffsetReset.Earliest,
+                    EnableAutoCommit = true
+                };
+                _messageConsumer = new ConsumerBuilder<Guid, T>(conf)
+                    .SetKeyDeserializer(new GuidDeserializer())
+                    .SetValueDeserializer(new OutputDeserializer<T>())
+                    .Build();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message}");
+            }
         }
 
         public void Start()
@@ -45,7 +52,7 @@ namespace PhoenixSagas.Kafka.Implementations
                 try
                 {
                     var consumeResult = _messageConsumer.Consume(cancellationToken);
-                    await _messageHandler.HandleMessageAsync(consumeResult.Message.Value, cancellationToken);
+                    _messagesHandler?.Invoke(this, consumeResult.Message.Value);
                 }
                 catch (OperationCanceledException)
                 {
@@ -58,6 +65,11 @@ namespace PhoenixSagas.Kafka.Implementations
             }
 
             _messageConsumer.Close(); // Ensure the consumer is properly closed when finished
+        }
+
+        public void Shutdown()
+        {
+            _cancelToken.Cancel();
         }
 
         public void Dispose()

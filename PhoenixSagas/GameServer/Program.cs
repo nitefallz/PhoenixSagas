@@ -25,7 +25,10 @@ namespace PhoenixSagas.GameServer
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddHostedService<GameServerHostedService>();
                     services.AddSingleton<IKafkaFactory, KafkaFactory>();
+                    services.AddSingleton<IGameEngine, GameEngine>();
+                    services.AddSingleton<IGameServer, GameServer>();
                     // Add any additional services or configurations here
                 });
     }

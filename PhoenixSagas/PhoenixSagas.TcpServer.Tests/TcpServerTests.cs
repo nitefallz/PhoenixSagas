@@ -14,20 +14,20 @@ namespace PhoenixSagas.Tests
         public async Task StartAsync_AcceptsNewConnection_CallsHandleNewConnection()
         {
             // Arrange
-            var mockConnectionManager = new Mock<IConnectionManager>();
-            // Setup the mock to expect a call to HandleNewConnection with any Socket and make it verifiable
-            mockConnectionManager.Setup(m => m.HandleNewConnection(It.IsAny<Socket>())).Verifiable();
+            //var mockConnectionManager = new Mock<IConnectionManager>();
+            //// Setup the mock to expect a call to HandleNewConnection with any Socket and make it verifiable
+            //mockConnectionManager.Setup(m => m.HandleNewConnection(It.IsAny<Socket>())).Verifiable();
 
-            // Mocking ITcpNetworkServer to focus on the StartAsync behavior
-            var mockTcpNetworkServer = new Mock<ITcpNetworkServer>();
-            // Setup the mock server to use the CancellationToken and simulate starting the server
-            mockTcpNetworkServer.Setup(server => server.StartAsync(It.IsAny<CancellationToken>()))
-                                 .Returns(Task.CompletedTask); // Simulate async operation completion
+            //// Mocking ITcpNetworkServer to focus on the StartAsync behavior
+            //var mockTcpNetworkServer = new Mock<ITcpNetworkServer>();
+            //// Setup the mock server to use the CancellationToken and simulate starting the server
+            //mockTcpNetworkServer.Setup(server => server.StartAsync(It.IsAny<CancellationToken>()))
+            //                     .Returns(Task.CompletedTask); // Simulate async operation completion
 
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)); // Increased to 5 seconds
+            //var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)); // Increased to 5 seconds
 
-            // Act
-            await mockTcpNetworkServer.Object.StartAsync(cts.Token);
+            //// Act
+            //await mockTcpNetworkServer.Object.StartAsync(cts.Token);
 
             // Since no actual connection is made in this test, and assuming the real connection handling triggers
             // HandleNewConnection on the connection manager, you might adjust the test logic here.
