@@ -2,10 +2,9 @@
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
-using PhoenixSagas.TCPServer.Implementations;
-using PhoenixSagas.TCPServer.Interfaces;
+using PhoenixSagas.TCPServer.Interfaes;
 
-namespace PhoenixSagas.TCPServer
+namespace PhoenixSagas.TCPServer.Implementations
 {
     public class TcpServerHostedService : IHostedService
     {

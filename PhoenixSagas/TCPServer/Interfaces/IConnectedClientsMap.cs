@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using PhoenixSagas.TCPServer.Models;
 
-namespace PhoenixSagas.TCPServer.Interfaces;
+namespace PhoenixSagas.TCPServer.Interfaes;
 
 public interface IConnectedClientsMap
 {

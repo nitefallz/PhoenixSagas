@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
 using PhoenixSagas.Models;
-using PhoenixSagas.TCPServer.Interfaces;
+using PhoenixSagas.TCPServer.Interfaes;
 using PhoenixSagas.TCPServer.Models;
 using System;
 using System.Net.Sockets;
@@ -19,10 +19,11 @@ namespace PhoenixSagas.TCPServer.Implementations
         private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
         private readonly ILogger<OutputHandler> _outputHandlerLogger;
 
-        public ConnectionManager(IConnectedClientsMap clients,  ILogger<OutputHandler> outputHandlerLogger)
+
+        public ConnectionManager(IConnectedClientsMap clients, ILogger<OutputHandler> outputHandlerLogger)
         {
             _clients = clients ?? throw new ArgumentNullException(nameof(clients));
-            _kafkaInputProducer = new KafkaFactory().BuildProducer<PlayerInput>("PlayerInput"); //kafkaInputProducer ?? throw new ArgumentNullException(nameof(kafkaInputProducer));
+            _kafkaInputProducer = new KafkaFactory().BuildProducer<PlayerInput>("PlayerInput");
             _outputHandlerLogger = outputHandlerLogger ?? throw new ArgumentNullException(nameof(outputHandlerLogger));
 
             var outputHandler = new OutputHandler(clients, _outputHandlerLogger);
@@ -35,6 +36,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             var tcpclient = new NetworkClient { client = new TcpClient { Client = socket }, Handle = socket.Handle.ToInt32(), InGame = false, gameId = Guid.NewGuid(), PendingDisconnect = false };
             var clientId = socket.Handle.ToInt32();
             _clients.Map.TryAdd(clientId, tcpclient);
+            Console.WriteLine($"Client connected {clientId}");
             Task.Run(() => ReadClientInput(tcpclient, clientId));
         }
 

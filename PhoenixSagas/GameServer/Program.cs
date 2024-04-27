@@ -4,10 +4,9 @@ using Microsoft.Extensions.Hosting;
 using PhoenixSagas.Kafka.Implementations;
 using PhoenixSagas.Kafka.Interfaces;
 using System.IO;
-using PhoenixSagas.TCPServer.Interfaes;
-using PhoenixSagas.TCPServer.Implementations;
 
-namespace PhoenixSagas.TcpServer
+
+namespace PhoenixSagas.GameServer
 {
     public class Program
     {
@@ -26,12 +25,10 @@ namespace PhoenixSagas.TcpServer
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddSingleton<ITcpNetworkServer,TcpNetworkServer>();
-                    services.AddHostedService<TcpServerHostedService>();
-                    services.AddSingleton<IConnectedClientsMap, ConnectedClientMap>();
-                    services.AddSingleton<IConnectionManager, ConnectionManager>();
+                    services.AddHostedService<GameServerHostedService>();
                     services.AddSingleton<IKafkaFactory, KafkaFactory>();
-                    
+                    services.AddSingleton<IGameEngine, GameEngine>();
+                    services.AddSingleton<IGameServer, GameServer>();
                     // Add any additional services or configurations here
                 });
     }

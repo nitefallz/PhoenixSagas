@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9C9EE5EB-3007-4363-ACA4-F08CA5C9D1E6}"
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile = Dockerfile
+		..\Jenkinsfile = ..\Jenkinsfile
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.Kafka", "Kafka\PhoenixSagas.Kafka.csproj", "{F6C39DA0-DDCD-4DF0-853E-9F7D30AAF73E}"
@@ -14,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.Models", "Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.TCPServer", "TCPServer\PhoenixSagas.TCPServer.csproj", "{19122D44-EE11-4C1B-927B-B33604D1784D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoenixSagas.TcpServer.Tests", "PhoenixSagas.TcpServer.Tests\PhoenixSagas.TcpServer.Tests.csproj", "{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.TcpServer.Tests", "PhoenixSagas.TcpServer.Tests\PhoenixSagas.TcpServer.Tests.csproj", "{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.GameServer", "GameServer\PhoenixSagas.GameServer.csproj", "{01A952D1-CEDF-4DB8-B24E-4F6A0A1D4C66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoenixSagas.GameEngine", "GameEngine\PhoenixSagas.GameEngine.csproj", "{6C912F7D-9740-44A4-BF28-F23D46218259}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +43,14 @@ Global
 		{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF35C8ED-0CAB-4DA4-A0AE-4D6BBC852E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01A952D1-CEDF-4DB8-B24E-4F6A0A1D4C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01A952D1-CEDF-4DB8-B24E-4F6A0A1D4C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01A952D1-CEDF-4DB8-B24E-4F6A0A1D4C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01A952D1-CEDF-4DB8-B24E-4F6A0A1D4C66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C912F7D-9740-44A4-BF28-F23D46218259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C912F7D-9740-44A4-BF28-F23D46218259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C912F7D-9740-44A4-BF28-F23D46218259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C912F7D-9740-44A4-BF28-F23D46218259}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
