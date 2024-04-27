@@ -8,7 +8,7 @@ namespace ChatBot
     {
         static async Task Main(string[] args)
         {
-            using var api = new OpenAIClient(new OpenAIAuthentication("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", "org-e21S4SkM1mR0fIxbZShlAUNN"));
+            
             
             string generateRoomsPrompt = @"For a MUD style RPG game I need you to build me rooms based on my forthcoming requests. 
                 Generate interconnected room descriptions for an abandoned, snowy town setting in JSON format, with Virtual Room IDs starting at 1000 and all other IDs as GUIDs. Each room should include details such as exits that connect to other rooms, objects within the room, and any NPCs or mobs. Ensure each room has a unique GUID and that exits correctly link rooms together, maintaining a coherent flow through the town.
