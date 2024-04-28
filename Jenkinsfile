@@ -69,11 +69,11 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    dir('PhoenixSagas/TCPServer/') { 
-                        sh 'docker build --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${TCP_IMAGE}:${TCP_TAG} .'
+                    dir('PhoenixSagas/') { 
+                        sh 'docker build -f Dockerfile.TcpServer --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${TCP_IMAGE}:${TCP_TAG} ./TCPServer'
                     }
-                    dir('PhoenixSagas/GameServer/') { 
-                        sh 'docker build --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${GAME_IMAGE}:${GAME_TAG} .'
+                    dir('PhoenixSagas/') { 
+                        sh 'docker build -f Dockerfile.GameServer --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${GAME_IMAGE}:${GAME_TAG} ./GameServer'
                     }
                 }
             }
@@ -116,8 +116,7 @@ pipeline {
                     """
                 }
             }
-        }
-      
+        }      
     }
 
     post {
