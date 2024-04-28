@@ -7,9 +7,9 @@
     <Title>PhoenixSagas Kafka Library</Title>
     <Description>Kafka library for MUD</Description>
       <RepositoryUrl>https://gomezdev.hopto.org:8090/NugetServer/nuget</RepositoryUrl>
-      <AssemblyVersion>1.0.0.3</AssemblyVersion>
-      <FileVersion>1.0.0.3</FileVersion>
-      <Version>1.0.3</Version>
+      <AssemblyVersion>1.0.0.5</AssemblyVersion>
+      <FileVersion>1.0.0.5</FileVersion>
+      <Version>1.0.5</Version>
   </PropertyGroup>
   
 

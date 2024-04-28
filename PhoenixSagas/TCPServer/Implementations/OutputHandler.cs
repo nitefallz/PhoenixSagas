@@ -10,7 +10,7 @@ using PhoenixSagas.TCPServer.Models;
 
 namespace PhoenixSagas.TCPServer.Implementations
 {
-    public class OutputHandler : IMessageHandler<PlayerOutput>
+    public class OutputHandler //: IMessageHandler<PlayerOutput>
     {
         private readonly IConnectedClientsMap _clients;
         private readonly ILogger<OutputHandler> _logger;

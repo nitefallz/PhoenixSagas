@@ -1,5 +1,5 @@
-﻿using System;
-using PhoenixSagas.Kafka.Interfaces;
+﻿using PhoenixSagas.Kafka.Interfaces;
+using System;
 
 namespace PhoenixSagas.Kafka.Implementations
 {

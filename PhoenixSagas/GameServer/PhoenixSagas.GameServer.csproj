@@ -32,19 +32,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="PhoenixSagas.Kafka" Version="1.0.3" />
+    <PackageReference Include="PhoenixSagas.Kafka" Version="1.0.5" />
     <PackageReference Include="PhoenixSagas.Models" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Kafka\PhoenixSagas.Kafka.csproj" />
-    <ProjectReference Include="..\Models\PhoenixSagas.Models.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PhoenixSagas.Kafka">
-      <HintPath>..\Kafka\bin\Debug\netstandard2.1\PhoenixSagas.Kafka.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
 </Project>
