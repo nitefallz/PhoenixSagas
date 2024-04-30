@@ -66,7 +66,7 @@ pipeline {
         }
 
         
-          stage('Build Docker Images') {
+        stage('Build Docker Images') {
             steps {
                 script {
                     dir('PhoenixSagas/') { 
@@ -92,31 +92,28 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-                    // Commands to stop, remove, and run a new container instance
-                    sh """
-                    docker stop phoenixsagas-tcpserver-container || true
-                    docker rm phoenixsagas-tcpserver-container || true
-                    docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 ${TCP_IMAGE}:${TCP_TAG}
-                    """
-                }
+    stage('Deploy') {
+        steps {
+            script {
+                // Pull the latest Docker image and redeploy the container
+                sh 'docker pull nitefallz/phoenix-tcpserver:latest'
+                sh 'docker stop phoenixsagas-tcpserver-container || true'
+                sh 'docker rm phoenixsagas-tcpserver-container || true'
+                sh 'docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 nitefallz/phoenix-tcpserver:latest'
             }
         }
-        
-        stage('Deploy GameEngine') {
-            steps {
-                script {
-                    // Commands to run GameEngine container
-                    sh """
-                    docker stop gameengine-container || true
-                    docker rm gameengine-container || true
-                    docker run -d --name gameengine-container -p 8000:8000 ${GAME_IMAGE}:${GAME_TAG}
-                    """
-                }
+    }
+    
+    stage('Deploy GameEngine') {
+        steps {
+            script {
+                // Pull the latest Docker image and redeploy the GameEngine container
+                sh 'docker pull nitefallz/phoenix-gameserver:latest'
+                sh 'docker stop gameengine-container || true'
+                sh 'docker rm gameengine-container || true'
+                sh 'docker run -d --name gameengine-container -p 8000:8000 nitefallz/phoenix-gameserver:latest'
             }
-        }      
+        }
     }
 
     post {
