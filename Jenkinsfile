@@ -15,11 +15,18 @@ pipeline {
 
 
     stages {
-        stage('Checkout') {
+       stage('Checkout') {
             steps {
-                checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'https://github.com/nitefallz/PhoenixSagas']]]
+                script {
+                    // Dynamically check out the branch that triggered the build
+                    checkout([$class: 'GitSCM', 
+                              branches: [[name: "*/${env.BRANCH_NAME}"]],
+                              userRemoteConfigs: [[url: 'https://github.com/nitefallz/PhoenixSagas']]
+                    ])
+                }
             }
         }
+
         
         stage('Restore NuGet Packages') {
             steps {
@@ -83,7 +90,7 @@ pipeline {
 stage('Push Docker Image') {
     steps {
         script {
-            withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+             withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
                         sh 'docker push ${TCP_IMAGE}:${TCP_TAG}'
                         sh 'docker push ${GAME_IMAGE}:${GAME_TAG}'
