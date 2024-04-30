@@ -27,7 +27,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, _port));
             _listenerSocket.Listen(120); 
-            Console.WriteLine($"Server started on port {_port}.");
+            Console.WriteLine($"Server started on port {_port}  - TEST.");
             _outputHandler.Start(cancellationToken);
             while (!_cts.Token.IsCancellationRequested)
             {
