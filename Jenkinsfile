@@ -1,17 +1,18 @@
 pipeline {
     agent any
 
-    environment {
-        // Using .NET 7.0 SDK
-        DOTNET_CORE_SDK_VERSION = '7.0'
-        TCP_IMAGE = 'nitefallz/phoenix-tcpserver' // Adjust with your Docker Hub repo name
-        TCP_TAG = 'latest'
-        GAME_IMAGE = 'nitefallz/phoenix-gameserver' // Adjust with your Docker Hub repo name
-        GAME_TAG = 'latest'
-        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Use the actual ID for Docker Hub credentials
-        NUGET_SERVER_URL = 'https://gomezdev.hopto.org:8090/NugetServer/nuget' // Your NuGet server URL
-        NUGET_API_KEY = '711cf1f2-d71d-4a75-9293-ecc6e2992228' // Your NuGet server API Key
-    }
+   environment {
+    // Using .NET 7.0 SDK
+    DOTNET_CORE_SDK_VERSION = '7.0'
+    TCP_IMAGE = 'nitefallz/phoenix-tcpserver'
+    TCP_TAG = "build-${BUILD_NUMBER}"
+    GAME_IMAGE = 'nitefallz/phoenix-gameserver'
+    GAME_TAG = "build-${BUILD_NUMBER}"
+    DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // Use the actual ID for Docker Hub credentials
+    NUGET_SERVER_URL = 'https://gomezdev.hopto.org:8090/NugetServer/nuget' // Your NuGet server URL
+    NUGET_API_KEY = '711cf1f2-d71d-4a75-9293-ecc6e2992228' // Your NuGet server API Key
+}
+
 
     stages {
         stage('Checkout') {
@@ -66,55 +67,55 @@ pipeline {
         }
 
         
-        stage('Build Docker Images') {
-            steps {
-                script {
-                    dir('PhoenixSagas/') { 
-                        sh 'docker build -f Dockerfile.TcpServer --no-cache --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${TCP_IMAGE}:${TCP_TAG} .'
-                    }
-                    dir('PhoenixSagas/') { 
-                        sh 'docker build -f Dockerfile.GameServer --no-cache --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${GAME_IMAGE}:${GAME_TAG} .'
-                    }
-                }
+       stage('Build Docker Images') {
+    steps {
+        script {
+            dir('PhoenixSagas/') { 
+                sh "docker build -f Dockerfile.TcpServer --no-cache --build-arg NUGET_SOURCE=\${NUGET_SERVER_URL} -t \${TCP_IMAGE}:\${TCP_TAG} ."
             }
-        }
-
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-                        sh 'docker push ${TCP_IMAGE}:${TCP_TAG}'
-                        sh 'docker push ${GAME_IMAGE}:${GAME_TAG}'
-                    }
-                }
-            }
-        }
-
-    stage('Deploy') {
-        steps {
-            script {
-                // Pull the latest Docker image and redeploy the container
-                sh 'docker stop phoenixsagas-tcpserver-container || true'
-                sh 'docker rm phoenixsagas-tcpserver-container || true'
-                sh 'docker pull nitefallz/phoenix-tcpserver:latest'
-                sh 'docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 nitefallz/phoenix-tcpserver:latest'
+            dir('PhoenixSagas/') { 
+                sh "docker build -f Dockerfile.GameServer --no-cache --build-arg NUGET_SOURCE=\${NUGET_SERVER_URL} -t \${GAME_IMAGE}:\${GAME_TAG} ."
             }
         }
     }
-    
-    stage('Deploy GameEngine') {
-        steps {
-            script {
-                // Pull the latest Docker image and redeploy the GameEngine container
-                sh 'docker stop gameengine-container || true'
-                sh 'docker rm gameengine-container || true'
-                sh 'docker pull nitefallz/phoenix-gameserver:latest'
-                sh 'docker run -d --name gameengine-container -p 8000:8000 nitefallz/phoenix-gameserver:latest'
+}
+
+stage('Push Docker Image') {
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: "\${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh "docker push \${TCP_IMAGE}:\${TCP_TAG}"
+                sh "docker push \${GAME_IMAGE}:\${GAME_TAG}"
             }
         }
     }
+}
+
+
+   stage('Deploy') {
+    steps {
+        script {
+            // Pull the latest Docker image and redeploy the container
+            sh 'docker pull \${TCP_IMAGE}:\${TCP_TAG}'
+            sh 'docker stop phoenixsagas-tcpserver-container || true'
+            sh 'docker rm phoenixsagas-tcpserver-container || true'
+            sh 'docker run -d --name phoenixsagas-tcpserver-container -p 4000:4000 \${TCP_IMAGE}:\${TCP_TAG}'
+        }
+    }
+}
+
+stage('Deploy GameEngine') {
+    steps {
+        script {
+            // Pull the latest Docker image and redeploy the GameEngine container
+            sh 'docker pull \${GAME_IMAGE}:\${GAME_TAG}'
+            sh 'docker stop gameengine-container || true'
+            sh 'docker rm gameengine-container || true'
+            sh 'docker run -d --name gameengine-container -p 8000:8000 \${GAME_IMAGE}:\${GAME_TAG}'
+        }
+    }
+}
+
     }
 
     post {
