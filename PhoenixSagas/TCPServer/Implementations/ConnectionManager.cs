@@ -16,19 +16,13 @@ namespace PhoenixSagas.TCPServer.Implementations
     {
         private readonly IConnectedClientsMap _clients;
         private readonly IKafkaProducer<PlayerInput> _kafkaInputProducer;
-        private readonly IKafkaConsumer<PlayerOutput> _kafkaOutputConsumer;
-        private readonly ILogger<OutputHandler> _outputHandlerLogger;
+        private readonly EventHandler _outputHandler;
 
 
         public ConnectionManager(IConnectedClientsMap clients, ILogger<OutputHandler> outputHandlerLogger)
         {
             _clients = clients ?? throw new ArgumentNullException(nameof(clients));
             _kafkaInputProducer = new KafkaFactory().BuildProducer<PlayerInput>("PlayerInput");
-            _outputHandlerLogger = outputHandlerLogger ?? throw new ArgumentNullException(nameof(outputHandlerLogger));
-
-            var outputHandler = new OutputHandler(clients, _outputHandlerLogger);
-           // _kafkaOutputConsumer = new KafkaConsumer<PlayerOutput>(playerOutputTopic, outputHandler);
-           // _kafkaOutputConsumer.Start();
         }
 
         public void HandleNewConnection(Socket socket)

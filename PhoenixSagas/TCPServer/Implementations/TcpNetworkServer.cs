@@ -1,9 +1,9 @@
-﻿using System;
+﻿using PhoenixSagas.TCPServer.Interfaes;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using PhoenixSagas.TCPServer.Interfaes;
 
 namespace PhoenixSagas.TCPServer.Implementations
 {
@@ -13,11 +13,12 @@ namespace PhoenixSagas.TCPServer.Implementations
         private readonly IConnectionManager _connectionManager;
         private readonly int _port = 4000;
         private CancellationTokenSource _cts = new();
+        private IOutputHandler _outputHandler;
 
-        public TcpNetworkServer(IConnectionManager connectionManager, int port = 4000)
+        public TcpNetworkServer(IConnectionManager connectionManager, IOutputHandler outputHandler)
         {
             _connectionManager = connectionManager ?? throw new ArgumentNullException(nameof(connectionManager));
-            _port = port;
+            _outputHandler = outputHandler ?? throw new ArgumentNullException(nameof(outputHandler));
         }
 
         public async Task Start(CancellationToken cancellationToken)
@@ -26,7 +27,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, _port));
             _listenerSocket.Listen(120); 
             Console.WriteLine($"Server started on port {_port}.");
-
+            _outputHandler.Start(cancellationToken);
             while (!_cts.Token.IsCancellationRequested)
             {
                 try
@@ -46,6 +47,7 @@ namespace PhoenixSagas.TCPServer.Implementations
         {
             _cts.Cancel();
             _listenerSocket.Close();
+            _outputHandler.ShutDown();
             Console.WriteLine("Server stopped.");
         }
     }
