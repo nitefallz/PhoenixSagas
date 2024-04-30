@@ -15,11 +15,18 @@ pipeline {
 
 
     stages {
-        stage('Checkout') {
+       stage('Checkout') {
             steps {
-                checkout scm: [$class: 'GitSCM', userRemoteConfigs: [[url: 'https://github.com/nitefallz/PhoenixSagas']]]
+                script {
+                    // Dynamically check out the branch that triggered the build
+                    checkout([$class: 'GitSCM', 
+                              branches: [[name: "*/${env.BRANCH_NAME}"]],
+                              userRemoteConfigs: [[url: 'https://github.com/nitefallz/PhoenixSagas']]
+                    ])
+                }
             }
         }
+
         
         stage('Restore NuGet Packages') {
             steps {
