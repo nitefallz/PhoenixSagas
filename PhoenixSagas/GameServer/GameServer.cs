@@ -21,6 +21,7 @@ namespace PhoenixSagas.GameServer
 
         public void Start(CancellationToken cancellationToken)
         {
+            Console.WriteLine("Update 1 running...");
             _playerInputConsumer.Start();
         }
 

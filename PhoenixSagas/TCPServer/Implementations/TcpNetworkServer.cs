@@ -23,6 +23,7 @@ namespace PhoenixSagas.TCPServer.Implementations
 
         public async Task Start(CancellationToken cancellationToken)
         {
+            Console.WriteLine("Update 1 running...");
             _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, _port));
             _listenerSocket.Listen(120); 
