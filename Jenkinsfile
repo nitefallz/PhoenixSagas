@@ -66,14 +66,14 @@ pipeline {
         }
 
         
-        stage('Build Docker Images') {
+          stage('Build Docker Images') {
             steps {
                 script {
                     dir('PhoenixSagas/') { 
-                        sh 'docker build -f Dockerfile.TcpServer --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${TCP_IMAGE}:${TCP_TAG} .'
+                        sh 'docker build -f Dockerfile.TcpServer --no-cache --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${TCP_IMAGE}:${TCP_TAG} .'
                     }
                     dir('PhoenixSagas/') { 
-                        sh 'docker build -f Dockerfile.GameServer --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${GAME_IMAGE}:${GAME_TAG} .'
+                        sh 'docker build -f Dockerfile.GameServer --no-cache --build-arg NUGET_SOURCE=${NUGET_SERVER_URL} -t ${GAME_IMAGE}:${GAME_TAG} .'
                     }
                 }
             }
