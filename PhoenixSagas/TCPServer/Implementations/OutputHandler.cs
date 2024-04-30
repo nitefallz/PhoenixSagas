@@ -32,25 +32,25 @@ namespace PhoenixSagas.TCPServer.Implementations
             _kafkaOutputConsumer.Shutdown();
         }
 
-        public async Task HandleMessageAsync(PlayerOutput output, CancellationToken cancellationToken)
+        public async Task HandleMessageAsync(PlayerOutput message, CancellationToken cancellationToken)
         {
-            if (_clients.Map.TryGetValue(output.socketId, out NetworkClient client))
+            if (_clients.Map.TryGetValue(message.socketId, out NetworkClient client))
             {
                 try
                 {
-                    var messageBytes = Encoding.UTF8.GetBytes(output.output); // Convert output to bytes
+                    var messageBytes = Encoding.UTF8.GetBytes(message.output); // Convert message to bytes
                     await client.client.GetStream().WriteAsync(messageBytes, 0, messageBytes.Length, cancellationToken);
-                    _logger.LogInformation($"Sent output to client {output.socketId}.");
+                    _logger.LogInformation($"Sent message to client {message.socketId}.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"Error sending output to client {output.socketId}: {ex.Message}");
+                    _logger.LogError($"Error sending message to client {message.socketId}: {ex.Message}");
                     // Consider handling the client disconnection or retry logic here
                 }
             }
             else
             {
-                _logger.LogWarning($"Client {output.socketId} not found.");
+                _logger.LogWarning($"Client {message.socketId} not found.");
             }
         }
 
