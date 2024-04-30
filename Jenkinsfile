@@ -83,9 +83,10 @@ pipeline {
 stage('Push Docker Image') {
     steps {
         script {
-            withCredentials([usernamePassword(credentialsId: "\${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                sh "docker push \${TCP_IMAGE}:\${TCP_TAG}"
-                sh "docker push \${GAME_IMAGE}:\${GAME_TAG}"
+            withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
+                        sh 'docker push ${TCP_IMAGE}:${TCP_TAG}'
+                        sh 'docker push ${GAME_IMAGE}:${GAME_TAG}'
             }
         }
     }
