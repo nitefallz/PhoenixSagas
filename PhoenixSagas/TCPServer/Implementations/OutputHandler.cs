@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PhoenixSagas.TCPServer.Implementations
 {
-    public class OutputHandler :IOutputHandler
+    public class OutputHandler : IOutputHandler
     {
         private readonly IConnectedClientsMap _clients;
         private readonly ILogger<OutputHandler> _logger;
@@ -20,7 +20,7 @@ namespace PhoenixSagas.TCPServer.Implementations
         {
             _clients = clients ?? throw new ArgumentNullException(nameof(clients));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            kafkaFactory.BuildConsumer<PlayerOutput>("PlayerOutput", delegate(object o, PlayerOutput output) { OnOutputReceived(o, output); });
+            _kafkaOutputConsumer = kafkaFactory.BuildConsumer<PlayerOutput>("PlayerOutput", delegate (object o, PlayerOutput output) { OnOutputReceived(o, output); });
         }
 
         public void Start(CancellationToken cancellationToken)

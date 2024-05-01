@@ -35,6 +35,7 @@ namespace PhoenixSagas.GameServer
             var output = new PlayerOutput()
             {
                 gameId = e.gameId,
+                socketId = e.socketId,
                 output = $"You typed in: {e.input}"
             };
           
