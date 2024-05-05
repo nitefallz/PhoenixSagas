@@ -13,7 +13,7 @@ namespace PhoenixSagas.TCPServer.Implementations
         private readonly IConnectionManager _connectionManager;
         private readonly int _port = 4000;
         private CancellationTokenSource _cts = new();
-        private IOutputHandler _outputHandler;
+        private readonly IOutputHandler _outputHandler;
 
         public TcpNetworkServer(IConnectionManager connectionManager, IOutputHandler outputHandler)
         {
@@ -27,7 +27,7 @@ namespace PhoenixSagas.TCPServer.Implementations
             _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, _port));
             _listenerSocket.Listen(120); 
-            Console.WriteLine($"Server started on port {_port}  - TEST.");
+            Console.WriteLine($"Server started on port {_port}");
             _outputHandler.Start(cancellationToken);
             while (!_cts.Token.IsCancellationRequested)
             {

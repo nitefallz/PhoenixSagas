@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.GameServer", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhoenixSagas.GameEngine", "GameEngine\PhoenixSagas.GameEngine.csproj", "{6C912F7D-9740-44A4-BF28-F23D46218259}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadTester", "LoadTester\LoadTester.csproj", "{F42F301F-0AF2-4CAE-9014-1F5EF6348E91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{6C912F7D-9740-44A4-BF28-F23D46218259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C912F7D-9740-44A4-BF28-F23D46218259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C912F7D-9740-44A4-BF28-F23D46218259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F42F301F-0AF2-4CAE-9014-1F5EF6348E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F42F301F-0AF2-4CAE-9014-1F5EF6348E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F42F301F-0AF2-4CAE-9014-1F5EF6348E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F42F301F-0AF2-4CAE-9014-1F5EF6348E91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
